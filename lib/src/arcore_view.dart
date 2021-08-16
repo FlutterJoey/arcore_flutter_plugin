@@ -70,7 +70,7 @@ class _ArCoreViewState extends State<ArCoreView> with WidgetsBindingObserver {
 
   @override
   void dispose() {
-    WidgetsBinding.instance!.removeObserver(this);
+    WidgetsBinding.instance?.removeObserver(this);
     super.dispose();
   }
 }
