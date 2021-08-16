@@ -36,12 +36,15 @@ class ArCoreMaterial {
     this.textureBytes,
   });
 
-  Map<String, dynamic> toMap() => <String, dynamic>{
-        'color': [color!.alpha, color!.red, color!.green, color!.blue],
+  Map<String, dynamic> toMap() {
+    Color color = this.color ?? Color(0xFFAABBCC);
+    return <String, dynamic>{
+      'color': [color.alpha, color.red, color.green, color.blue],
 //        'texture': this.texture,
-        'textureBytes': this.textureBytes,
-        'metallic': this.metallic,
-        'roughness': this.roughness,
-        'reflectance': this.reflectance,
-      }..removeWhere((String k, dynamic v) => v == null);
+      'textureBytes': this.textureBytes,
+      'metallic': this.metallic,
+      'roughness': this.roughness,
+      'reflectance': this.reflectance,
+    }..removeWhere((String k, dynamic v) => v == null);
+  }
 }
