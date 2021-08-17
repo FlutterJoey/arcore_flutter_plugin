@@ -153,14 +153,14 @@ class ArCoreController {
 
   addArCoreNodeToAugmentedImage(ArCoreNode node, int index,
       {String? parentNodeName}) {
-    final params = _addParentNodeNameToParams(node.toMap(), parentNodeName!);
+    final params = _addParentNodeNameToParams(node.toMap(), parentNodeName);
     return _channel!.invokeMethod(
         'attachObjectToAugmentedImage', {'index': index, 'node': params});
   }
 
   Future<void> addArCoreNodeWithAnchor(ArCoreNode node,
       {String? parentNodeName}) {
-    final params = _addParentNodeNameToParams(node.toMap(), parentNodeName!);
+    final params = _addParentNodeNameToParams(node.toMap(), parentNodeName);
     if (debug ?? true) {
       print(params.toString());
     }
@@ -177,8 +177,8 @@ class ArCoreController {
   }
 
   Map<String, dynamic>? _addParentNodeNameToParams(
-      Map<String, dynamic> geometryMap, String parentNodeName) {
-    if (parentNodeName.isNotEmpty)
+      Map<String, dynamic> geometryMap, String? parentNodeName) {
+    if (parentNodeName?.isNotEmpty == true)
       geometryMap['parentNodeName'] = parentNodeName;
     return geometryMap;
   }
