@@ -10,8 +10,8 @@ class RuntimeMaterials extends StatefulWidget {
 }
 
 class _RuntimeMaterialsState extends State<RuntimeMaterials> {
-  ArCoreController arCoreController;
-  ArCoreNode sphereNode;
+  late ArCoreController arCoreController;
+  ArCoreNode? sphereNode;
 
   double metallic = 0.0;
   double roughness = 0.4;
@@ -72,7 +72,7 @@ class _RuntimeMaterialsState extends State<RuntimeMaterials> {
       shape: sphere,
       position: vector.Vector3(0, 0, -1.5),
     );
-    controller.addArCoreNode(sphereNode);
+    controller.addArCoreNode(sphereNode!);
   }
 
   onColorChange(Color newColor) {
@@ -115,7 +115,7 @@ class _RuntimeMaterialsState extends State<RuntimeMaterials> {
       roughness: roughness,
       reflectance: reflectance,
     );
-    sphereNode.shape.materials.value = [material];
+    sphereNode?.shape?.materials?.value = [material];
   }
 
   @override
@@ -136,15 +136,15 @@ class SphereControl extends StatefulWidget {
   final ValueChanged<double> onReflectanceChange;
 
   const SphereControl(
-      {Key key,
-      this.initialRoughnessValue,
-      this.initialReflectanceValue,
-      this.initialMetallicValue,
-      this.initialColor,
-      this.onColorChange,
-      this.onMetallicChange,
-      this.onRoughnessChange,
-      this.onReflectanceChange})
+      {Key? key,
+      required this.initialRoughnessValue,
+      required this.initialReflectanceValue,
+      required this.initialMetallicValue,
+      required this.initialColor,
+      required this.onColorChange,
+      required this.onMetallicChange,
+      required this.onRoughnessChange,
+      required this.onReflectanceChange})
       : super(key: key);
 
   @override
@@ -152,10 +152,10 @@ class SphereControl extends StatefulWidget {
 }
 
 class _SphereControlState extends State<SphereControl> {
-  double metallicValue;
-  double roughnessValue;
-  double reflectanceValue;
-  Color color;
+  late double metallicValue;
+  late double roughnessValue;
+  late double reflectanceValue;
+  late Color color;
 
   @override
   void initState() {
@@ -175,7 +175,7 @@ class _SphereControlState extends State<SphereControl> {
         children: <Widget>[
           Row(
             children: <Widget>[
-              RaisedButton(
+              ElevatedButton(
                 child: Text("Random Color"),
                 onPressed: () {
                   final newColor = Colors.accents[Random().nextInt(14)];
@@ -200,7 +200,7 @@ class _SphereControlState extends State<SphereControl> {
               Checkbox(
                 value: metallicValue == 1.0,
                 onChanged: (value) {
-                  metallicValue = value ? 1.0 : 0.0;
+                  metallicValue = (value ?? false) ? 1.0 : 0.0;
                   widget.onMetallicChange(metallicValue);
                   setState(() {});
                 },

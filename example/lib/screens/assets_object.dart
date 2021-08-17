@@ -7,9 +7,9 @@ class AssetsObject extends StatefulWidget {
 }
 
 class _AssetsObjectState extends State<AssetsObject> {
-  ArCoreController arCoreController;
+  late ArCoreController arCoreController;
 
-  String objectSelected;
+  String? objectSelected;
 
   @override
   Widget build(BuildContext context) {
@@ -100,7 +100,7 @@ class _AssetsObjectState extends State<AssetsObject> {
 class ListObjectSelection extends StatefulWidget {
   final Function onTap;
 
-  ListObjectSelection({this.onTap});
+  ListObjectSelection({required this.onTap});
 
   @override
   _ListObjectSelectionState createState() => _ListObjectSelectionState();
@@ -119,7 +119,7 @@ class _ListObjectSelectionState extends State<ListObjectSelection> {
     'artic_fox.sfb',
   ];
 
-  String selected;
+  String? selected;
 
   @override
   void initState() {

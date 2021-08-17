@@ -13,7 +13,7 @@ class MultipleAugmentedImagesPage extends StatefulWidget {
 
 class _MultipleAugmentedImagesPageState
     extends State<MultipleAugmentedImagesPage> {
-  ArCoreController arCoreController;
+  late ArCoreController arCoreController;
   Map<String, ArCoreAugmentedImage> augmentedImagesMap = Map();
   Map<String, Uint8List> bytesMap = Map();
 

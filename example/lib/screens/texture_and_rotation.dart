@@ -11,9 +11,9 @@ class ObjectWithTextureAndRotation extends StatefulWidget {
 
 class _ObjectWithTextureAndRotationState
     extends State<ObjectWithTextureAndRotation> {
-  ArCoreController arCoreController;
+  late ArCoreController arCoreController;
 
-  ArCoreRotatingNode node;
+  ArCoreRotatingNode? node;
 
   @override
   Widget build(BuildContext context) {
@@ -60,7 +60,7 @@ class _ObjectWithTextureAndRotationState
       position: vector.Vector3(0, 0, -1.5),
       rotation: vector.Vector4(0, 0, 0, 0),
     );
-    controller.addArCoreNode(node);
+    controller.addArCoreNode(node!);
   }
 
   onDegreesPerSecondChange(double value) {
@@ -68,15 +68,15 @@ class _ObjectWithTextureAndRotationState
       return;
     }
     debugPrint("onDegreesPerSecondChange");
-    if (node.degreesPerSecond.value != value) {
+    if (node?.degreesPerSecond.value != value) {
       debugPrint("onDegreesPerSecondChange: $value");
-      node.degreesPerSecond.value = value;
+      node?.degreesPerSecond.value = value;
     }
   }
 
   @override
   void dispose() {
-    arCoreController?.dispose();
+    arCoreController.dispose();
     super.dispose();
   }
 }
@@ -86,9 +86,9 @@ class RotationSlider extends StatefulWidget {
   final ValueChanged<double> onDegreesPerSecondChange;
 
   const RotationSlider(
-      {Key key,
-      this.degreesPerSecondInitialValue,
-      this.onDegreesPerSecondChange})
+      {Key? key,
+      required this.degreesPerSecondInitialValue,
+      required this.onDegreesPerSecondChange})
       : super(key: key);
 
   @override
@@ -96,7 +96,7 @@ class RotationSlider extends StatefulWidget {
 }
 
 class _RotationSliderState extends State<RotationSlider> {
-  double degreesPerSecond;
+  late double degreesPerSecond;
 
   @override
   void initState() {

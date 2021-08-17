@@ -9,7 +9,7 @@ class HelloWorld extends StatefulWidget {
 }
 
 class _HelloWorldState extends State<HelloWorld> {
-  ArCoreController arCoreController;
+  late ArCoreController arCoreController;
 
   @override
   Widget build(BuildContext context) {
