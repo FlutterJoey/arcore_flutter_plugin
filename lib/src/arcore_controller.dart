@@ -135,7 +135,7 @@ class ArCoreController {
   }
 
   Future<void> addArCoreNode(ArCoreNode node, {String? parentNodeName}) {
-    final params = _addParentNodeNameToParams(node.toMap(), parentNodeName!);
+    final params = _addParentNodeNameToParams(node.toMap(), parentNodeName);
     if (debug ?? true) {
       print(params.toString());
     }
