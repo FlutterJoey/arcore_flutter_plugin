@@ -20,6 +20,7 @@ class _AugmentedPageState extends State<AugmentedPage> {
         ),
         body: ArCoreView(
           onArCoreViewCreated: _onArCoreViewCreated,
+          enableTapRecognizer: true,
           type: ArCoreViewType.AUGMENTEDIMAGES,
         ),
       ),
@@ -29,9 +30,10 @@ class _AugmentedPageState extends State<AugmentedPage> {
   void _onArCoreViewCreated(ArCoreController controller) async {
     arCoreController = controller;
     arCoreController.onTrackingImage = _handleOnTrackingImage;
-    //loadSingleImage();
+    arCoreController.onNodeTap = (name) => print(name);
+    loadSingleImage();
     //OR
-    loadImagesDatabase();
+    // loadImagesDatabase();
   }
 
   loadSingleImage() async {

@@ -6,9 +6,11 @@ import android.graphics.Bitmap
 import android.graphics.BitmapFactory
 import android.util.Log
 import android.util.Pair
+import com.difrancescogianmarco.arcore_flutter_plugin.flutter_models.FlutterArCoreHitTestResult
 import com.difrancescogianmarco.arcore_flutter_plugin.flutter_models.FlutterArCoreNode
 import com.difrancescogianmarco.arcore_flutter_plugin.flutter_models.FlutterArCorePose
 import com.difrancescogianmarco.arcore_flutter_plugin.utils.ArCoreUtils
+import com.google.ar.core.*
 import com.google.ar.core.AugmentedImage
 import com.google.ar.core.AugmentedImageDatabase
 import com.google.ar.core.Config
@@ -23,10 +25,13 @@ import io.flutter.plugin.common.MethodChannel
 import java.io.ByteArrayInputStream
 import java.io.IOException
 import java.util.*
+import com.google.ar.sceneform.*
 import com.google.ar.core.exceptions.*
 import com.google.ar.core.*
 import kotlinx.coroutines.*
 import kotlin.coroutines.CoroutineContext
+import android.view.GestureDetector
+import android.view.MotionEvent
 
 class ArCoreAugmentedImagesView(activity: Activity, context: Context, messenger: BinaryMessenger, id: Int, val useSingleImage: Boolean, debug: Boolean) : BaseArCoreView(activity, context, messenger, id, debug), CoroutineScope {
 
@@ -36,12 +41,25 @@ class ArCoreAugmentedImagesView(activity: Activity, context: Context, messenger:
     // the
     // database.
     private val augmentedImageMap = HashMap<Int, Pair<AugmentedImage, AnchorNode>>()
+    private val gestureDetector: GestureDetector
 
     private var job: Job = Job()
     override val coroutineContext: CoroutineContext
         get() = Dispatchers.Main + job
 
     init {
+
+        gestureDetector = GestureDetector(
+                context,
+                object : GestureDetector.SimpleOnGestureListener() {
+                    override fun onSingleTapUp(e: MotionEvent): Boolean {
+                        return true
+                    }
+
+                    override fun onDown(e: MotionEvent): Boolean {
+                        return true
+                    }
+                })
 
         sceneUpdateListener = Scene.OnUpdateListener { frameTime ->
 
@@ -137,7 +155,7 @@ class ArCoreAugmentedImagesView(activity: Activity, context: Context, messenger:
             when (call.method) {
                 "init" -> {
                     debugLog( "INIT AUGMENTED IMAGES")
-                    arScenViewInit(call, result)
+                    arScenViewInit(call, result, activity)
                 }
                 "load_single_image_on_db" -> {
                     debugLog( "load_single_image_on_db")
@@ -209,7 +227,23 @@ class ArCoreAugmentedImagesView(activity: Activity, context: Context, messenger:
         }
     }
 
-    private fun arScenViewInit(call: MethodCall, result: MethodChannel.Result) {
+    private fun arScenViewInit(call: MethodCall, result: MethodChannel.Result, context: Context) {
+        val enableTapRecognizer: Boolean? = call.argument("enableTapRecognizer")
+        if (enableTapRecognizer != null && enableTapRecognizer) {
+            arSceneView
+                    ?.scene
+                    ?.setOnTouchListener { hitTestResult: HitTestResult, event: MotionEvent? ->
+
+                        if (hitTestResult.node != null) {
+                            debugLog(" onNodeTap " + hitTestResult.node?.name)
+                            debugLog(hitTestResult.node?.localPosition.toString())
+                            debugLog(hitTestResult.node?.worldPosition.toString())
+                            methodChannel.invokeMethod("onNodeTap", hitTestResult.node?.name)
+                            return@setOnTouchListener true
+                        }
+                        return@setOnTouchListener gestureDetector.onTouchEvent(event)
+                    }
+        }
         arSceneView?.scene?.addOnUpdateListener(sceneUpdateListener)
         onResume()
         result.success(null)
